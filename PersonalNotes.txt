@@ -1,0 +1,8 @@
+https://kestrel.readthedocs.io/en/latest/installation/analytics.html
+This link talks about how to add analytics API to kestrel.
+
+So far, I have set it up such that I can run a python function, and have it interact with the virustotal api in different ways depending on the arguments.
+That means I am mostly complete with the Python Analytics Interface.
+
+According to the aformentioned link, the next kind of analytics kestrel supports is a Docker Analytics Interface.
+To be perfectly honest, I have not used Docker before, but I intend to learn it.
