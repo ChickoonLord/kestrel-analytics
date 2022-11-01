@@ -1,3 +1,4 @@
+Midyear review:
 https://kestrel.readthedocs.io/en/latest/installation/analytics.html
 This link talks about how to add analytics API to kestrel.
 
@@ -6,3 +7,10 @@ That means I am mostly complete with the Python Analytics Interface.
 
 According to the aformentioned link, the next kind of analytics kestrel supports is a Docker Analytics Interface.
 To be perfectly honest, I have not used Docker before, but I intend to learn it.
+
+
+10/31/2022:
+Talked to the external project lead. I won't be using Docker (yet) instead I will integrate the API, which is 
+currently an isolated python program, with the Kestrel language.
+https://kestrel.readthedocs.io/en/stable/source/kestrel_analytics_python.interface.html
+This documentation will surely be helpful.
