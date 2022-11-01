@@ -86,7 +86,7 @@ class VirusTotal(object):
         """
         url = self.URL_BASE + "file/scan"
         attr = {"apikey": self.apikey}
-
+        print(self.apikey)
         for filename in filenames:
             files = {"file": open(filename, 'rb')}
             res = requests.post(url, data=attr, files=files)
@@ -163,8 +163,11 @@ class VirusTotal(object):
 if __name__ == "__main__":
     vt = VirusTotal()
     try:
+        print(os.getenv("HOME") + '/.virustotal.api')
+        #/home/david/virustotal.api
         with open(os.getenv("HOME") + '/.virustotal.api') as keyfile:
             vt.apikey = keyfile.read().strip()
+            #print(keyfile.readline())
     except:
         print('[Error] Please put your VirusTotal API Key in file "$HOME/.virustotal.api"')
         sys.exit()
