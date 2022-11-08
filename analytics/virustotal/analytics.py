@@ -120,6 +120,36 @@ class VirusTotal(object):
             else:
                 self.logger.warning("retrieve report: %s, HTTP: %d", os.path.basename(filename), res.status_code)
 
+    def send_ip(self, ipAddress):
+
+        url = "https://www.virustotal.com/api/v3/ip_addresses/{}".format(ipAddress)
+        headers = {
+            "accept": "application/json",
+            "x-apikey": "{}".format(self.apikey)
+        }
+
+        response = requests.get(url, headers=headers)
+
+        parse_json=json.loads(response.text)
+
+        if 'error' not in parse_json:
+            IPv4_report=parse_json['data']['attributes']['last_analysis_stats']
+            harmless_stat=IPv4_report['harmless']
+            undetected_stat=IPv4_report['undetected']
+            suspicious_stat=IPv4_report['suspicious']
+            malicious_stat=IPv4_report['malicious']
+
+        if 'error' in parse_json:
+            print("IPv4 address is invalid.")
+        elif malicious_stat > 0:
+            print("This IPv4 address is a known bad actor.")
+        elif harmless_stat > 0 and malicious_stat == 0 and suspicious_stat == 0:
+            print("This IPv4 address is not a known bad actor.")
+        elif undetected_stat > 0:
+            print("The threat level of this IPv4 address is currrently unknown.")
+        else:
+            print("This IPv4 address is potentially from a bad actor.")
+    
     def retrieve_from_meta(self, filename):
         """
         Retrieve Report for checksums in the metafile
@@ -163,7 +193,6 @@ class VirusTotal(object):
 if __name__ == "__main__":
     vt = VirusTotal()
     try:
-        print(os.getenv("HOME") + '/.virustotal.api')
         #/home/david/virustotal.api
         with open(os.getenv("HOME") + '/.virustotal.api') as keyfile:
             vt.apikey = keyfile.read().strip()
@@ -176,6 +205,7 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--private", help="the API key belongs to a private API service", action="store_true")
     parser.add_argument("-v", "--verbose", help="print verbose log (everything in response)", action="store_true")
     parser.add_argument("-s", "--send", help="send a file or a directory of files to scan", metavar="PATH")
+    parser.add_argument("-i", "--ipsend", help="send an IPv4 address to scan", metavar="PATH")
     parser.add_argument("-r", "--retrieve", help="retrieve reports on a file or a directory of files", metavar="PATH")
     parser.add_argument("-m", "--retrievefrommeta", help="retrieve reports based on checksums in a metafile (one sha256 checksum for each line)", metavar="METAFILE")
     parser.add_argument("-l", "--log", help="log actions and responses in file", metavar="LOGFILE")
@@ -204,3 +234,6 @@ if __name__ == "__main__":
 
     if args.retrievefrommeta:
         vt.retrieve_from_meta(args.retrievefrommeta)
+
+    if args.ipsend:
+        vt.send_ip(args.ipsend)
